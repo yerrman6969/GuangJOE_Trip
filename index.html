@@ -425,6 +425,8 @@
     <div class="tab" onclick="showPage('wed')">Wed 13</div>
     <div class="tab" onclick="showPage('gaf')">GAF</div>
     <div class="tab" onclick="showPage('tips')">Tips</div>
+    <div class="tab" onclick="showPage('files')">Files</div>
+    <div class="tab" onclick="showPage('checklist')">✓ List</div>
   </div>
 </div>
 
@@ -823,6 +825,166 @@
     <div class="safe-bottom"></div>
   </div>
 
+  <!-- FILES -->
+  <div class="page" id="page-files">
+    <div class="info-section">
+
+      <!-- iCloud open button -->
+      <div style="background:var(--ink);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:20px;text-align:center">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">All files saved in iCloud</div>
+        <div style="font-size:13px;color:var(--white);margin-bottom:14px;font-weight:600">📁 广JOE GAF 2026</div>
+        <a href="shareddocuments://" style="display:inline-block;background:var(--gold);color:var(--black);font-weight:700;font-size:14px;padding:10px 24px;border-radius:30px;text-decoration:none">Open Files App →</a>
+        <div style="font-size:11px;color:var(--muted);margin-top:10px">Tap → navigate to iCloud Drive → 广JOE GAF 2026</div>
+      </div>
+
+      <div style="height:16px"></div>
+      <div class="info-title">📋 Key Info — tap to expand</div>
+      <div class="info-title">✈️ Flight Documents</div>
+
+      <div class="info-card" onclick="this.querySelector('.file-detail').style.display=this.querySelector('.file-detail').style.display==='none'?'block':'none'" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="info-card-title">✈️ E-Itinerary (Trip.com)</div>
+          <span style="font-size:18px;color:var(--gold)">›</span>
+        </div>
+        <div class="file-detail" style="display:none;margin-top:10px">
+          <div class="info-card-body">Booking No: 1688900379018830<br/>BKK → GZ: CZ3036 — Aug 11, 02:55 (BKK T1) → 07:00 (CAN T2)<br/>GZ → BKK: CZ357 — Aug 17, 08:15 (CAN T2) → 10:20 (BKK T1)<br/>E-ticket: 784-4853399452 · Ref: NTVFF0<br/>Baggage: 1 checked bag 23kg each way<br/>File: E-itinerary.pdf</div>
+        </div>
+      </div>
+
+      <div class="info-card" onclick="this.querySelector('.file-detail').style.display=this.querySelector('.file-detail').style.display==='none'?'block':'none'" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="info-card-title">🧾 Flight E-Receipt (Trip.com)</div>
+          <span style="font-size:18px;color:var(--gold)">›</span>
+        </div>
+        <div class="file-detail" style="display:none;margin-top:10px">
+          <div class="info-card-body">Total paid: THB 9,559.00<br/>Fare: 5,010 · Tax: 2,945 · Insurance: 499 · TripFlex: 1,065<br/>Visa card: ****4116 (implied from hotel receipt)<br/>File: E-receipt.pdf</div>
+        </div>
+      </div>
+
+      <div class="info-title" style="margin-top:20px">🏨 Hotel Documents</div>
+
+      <div class="info-card" onclick="this.querySelector('.file-detail').style.display=this.querySelector('.file-detail').style.display==='none'?'block':'none'" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="info-card-title">🏨 Check-in Voucher (English)</div>
+          <span style="font-size:18px;color:var(--gold)">›</span>
+        </div>
+        <div class="file-detail" style="display:none;margin-top:10px">
+          <div class="info-card-body">Junfu Meiju Hotel — Room 102<br/>No. 29 Tangxiayong West Rd, Tianhe, Guangzhou<br/>Tel: +86-20-32061924<br/>Confirmation No: 26071440382678164 · PIN: 4052 (do not disclose)<br/>Check-in: Aug 11 after 14:00 · Check-out: Aug 17 before 14:00<br/>Room: Central Scenic Exquisite Double Bed (King bed, 2 adults)<br/>Paid: THB 6,676.26 (incl. VAT)<br/>Cancellation: Free before 18:00 Aug 11<br/>File: Check-in_voucher.pdf</div>
+        </div>
+      </div>
+
+      <div class="info-card" onclick="this.querySelector('.file-detail').style.display=this.querySelector('.file-detail').style.display==='none'?'block':'none'" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="info-card-title">🏨 Check-in Voucher (English, Visa)</div>
+          <span style="font-size:18px;color:var(--gold)">›</span>
+        </div>
+        <div class="file-detail" style="display:none;margin-top:10px">
+          <div class="info-card-body">Same hotel details — English version for visa application use.<br/>File: English_check-in_voucher__for_visa_application_.pdf</div>
+        </div>
+      </div>
+
+      <div class="info-card" onclick="this.querySelector('.file-detail').style.display=this.querySelector('.file-detail').style.display==='none'?'block':'none'" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="info-card-title">🧾 Hotel Booking E-Receipt</div>
+          <span style="font-size:18px;color:var(--gold)">›</span>
+        </div>
+        <div class="file-detail" style="display:none;margin-top:10px">
+          <div class="info-card-body">Booking No: 1688899639672310<br/>Total: THB 8,141.84 · Discount: -1,465.58 · Trip Coins: -192.45<br/>Total paid (Visa ****4116): THB 6,483.81<br/>File: Hotel_Booking_E-receipt.pdf</div>
+        </div>
+      </div>
+
+      <div class="info-title" style="margin-top:20px">🎪 GAF Documents</div>
+
+      <div class="info-card" onclick="this.querySelector('.file-detail').style.display=this.querySelector('.file-detail').style.display==='none'?'block':'none'" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="info-card-title">📨 GAF Acceptance Letter (Image)</div>
+          <span style="font-size:18px;color:var(--gold)">›</span>
+        </div>
+        <div class="file-detail" style="display:none;margin-top:10px">
+          <div class="info-card-body">Official 2026 GAF Guangzhou congratulations letter.<br/>Booth: JOE the SEA-CRET Agent · Type: A1 Artist Booth<br/>Space: L200×W200×H300cm · Table: 120×60cm<br/>Items: 1 table, 2 lights, 2 chairs, 2 vendor cards, 2 gift tickets<br/>Booth fee: ¥1,620 RMB (10% returning vendor discount)<br/>Event: Aug 14–16, Poly World Trade Center Hall 2<br/>Contact: gafartfair@gmail.com · WeChat: gaf_global<br/>File: GAF_Guangzhou_Letter.jpeg</div>
+        </div>
+      </div>
+
+      <div class="info-card" onclick="this.querySelector('.file-detail').style.display=this.querySelector('.file-detail').style.display==='none'?'block':'none'" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="info-card-title">📄 GAF Artist Profile #1 (TH)</div>
+          <span style="font-size:18px;color:var(--gold)">›</span>
+        </div>
+        <div class="file-detail" style="display:none;margin-top:10px">
+          <div class="info-card-body">Thai-language artist profile submission for GAF 2026.<br/>File: Suttichart_Sarapaiwanich_-_GAF_01.pdf</div>
+        </div>
+      </div>
+
+      <div class="info-card" onclick="this.querySelector('.file-detail').style.display=this.querySelector('.file-detail').style.display==='none'?'block':'none'" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="info-card-title">📄 GAF Artist Profile #2 (EN)</div>
+          <span style="font-size:18px;color:var(--gold)">›</span>
+        </div>
+        <div class="file-detail" style="display:none;margin-top:10px">
+          <div class="info-card-body">English-language artist profile submission for GAF 2026.<br/>File: Suttichart_Sarapaiwanich_-_GAF_02.pdf</div>
+        </div>
+      </div>
+
+      <div class="info-title" style="margin-top:20px">🛂 Travel Documents</div>
+
+      <div class="info-card" onclick="this.querySelector('.file-detail').style.display=this.querySelector('.file-detail').style.display==='none'?'block':'none'" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="info-card-title">🛂 China Entry Declaration Receipt</div>
+          <span style="font-size:18px;color:var(--gold)">›</span>
+        </div>
+        <div class="file-detail" style="display:none;margin-top:10px">
+          <div class="info-card-body">National Immigration Administration — Foreigner Entry Declaration<br/>Card No: ADD209242<br/>Name: SARAPAIWANICH SUTTICHART<br/>Citizenship: Thailand<br/>Entry City: Guangzhou · Port: Baiyun<br/>Entry Date: 2026-08-11 · Submission: 2026-08-06<br/>⚠️ Register with local police within 24hrs if staying outside a hotel.<br/>File: receipt_info.pdf</div>
+        </div>
+      </div>
+
+      <div class="info-card" onclick="this.querySelector('.file-detail').style.display=this.querySelector('.file-detail').style.display==='none'?'block':'none'" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="info-card-title">🛂 Passport (Color Copy)</div>
+          <span style="font-size:18px;color:var(--gold)">›</span>
+        </div>
+        <div class="file-detail" style="display:none;margin-top:10px">
+          <div class="info-card-body">Kingdom of Thailand Passport<br/>No: AD0209242<br/>Name: MR. SUTTICHART SARAPAIWANICH<br/>DOB: 30 JUN 1972 · Place: Bangkok<br/>Issued: 24 OCT 2022 · Expires: 23 OCT 2032<br/>File: My_Passport_Color.jpeg</div>
+        </div>
+      </div>
+
+      <div class="info-title" style="margin-top:20px">🛡️ Insurance</div>
+
+      <div class="info-card" onclick="this.querySelector('.file-detail').style.display=this.querySelector('.file-detail').style.display==='none'?'block':'none'" style="cursor:pointer">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="info-card-title">🛡️ MSIG Travel Insurance Certificate</div>
+          <span style="font-size:18px;color:var(--gold)">›</span>
+        </div>
+        <div class="file-detail" style="display:none;margin-top:10px">
+          <div class="info-card-body">MSIG Worldwide Plus — Policy No: 59570021<br/>Insured: SUTTICHART SARAPAIWANICH · Age 54<br/>Route: Thailand → China<br/>Period: 7 days · Aug 11–17, 2026<br/>Coverage: Medical (300,000 THB) · Emergency Evac (1M THB) · Baggage (15,000 THB) · Trip Cancel (100,000 THB) · Flight Delay · Personal Liability<br/>Emergency Helpline: +66 (0)2 039 5704 (24/7)<br/>File: suttichart_sarapaiwanich.pdf</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="safe-bottom"></div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="page" id="page-checklist">
+    <div class="info-section">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="info-title" style="margin-bottom:0">My Checklist</div>
+        <button onclick="clearDone()" style="font-size:11px;color:var(--red);background:none;border:1px solid rgba(200,74,74,0.3);border-radius:20px;padding:4px 10px;cursor:pointer">Clear Done</button>
+      </div>
+
+      <!-- Add new item -->
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <input id="new-item" type="text" placeholder="Add new item..." style="flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--white);font-size:14px;outline:none" onkeydown="if(event.key==='Enter')addItem()"/>
+        <button onclick="addItem()" style="background:var(--gold);color:var(--black);border:none;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer">+</button>
+      </div>
+
+      <!-- Default pre-loaded checklist items -->
+      <div class="info-title">Pre-trip</div>
+      <div id="checklist-container"></div>
+
+    </div>
+    <div class="safe-bottom"></div>
+  </div>
+
 </div>
 
 <script>
@@ -860,6 +1022,104 @@
 
   updateCountdown();
   setInterval(updateCountdown, 30000);
+
+  // CHECKLIST
+  const DEFAULT_ITEMS = [
+    { text: 'Passport (AD0209242) — expires 23 Oct 2032', done: false },
+    { text: 'Print E-Itinerary (CZ3036 / CZ357)', done: false },
+    { text: 'Print Hotel check-in voucher', done: false },
+    { text: 'Print China Entry Declaration receipt', done: false },
+    { text: 'Print MSIG Insurance certificate', done: false },
+    { text: 'Print GAF acceptance letter', done: false },
+    { text: 'Alipay / WeChat Pay — link international card', done: false },
+    { text: 'Download Amap (Gaode) for navigation', done: false },
+    { text: 'Add WeChat: gaf_global (GAF official)', done: false },
+    { text: 'Book GAFA museum ticket (Damai WeChat mini)', done: false },
+    { text: 'Notify Xiaohongshu search: 笔小轩 昌岗 hours', done: false },
+    { text: 'Pack: cooling towel + SPF50 sunscreen', done: false },
+    { text: 'Pack: small folding umbrella', done: false },
+    { text: 'Pack: G Pen nibs + ink + sketchbook', done: false },
+    { text: 'Pack: gouache paints for 广JOE series', done: false },
+    { text: 'Pack: booth display materials', done: false },
+    { text: 'Pack: artwork prints + postcards + stickers', done: false },
+    { text: 'Checked baggage: 23kg max (China Southern)', done: false },
+    { text: 'Arrive Suvarnabhumi T1 by 23:55 Aug 10 (3hrs before)', done: false },
+    { text: 'Set alarm: flight CZ3036 departs 02:55 Aug 11', done: false },
+  ];
+
+  function loadItems() {
+    const saved = localStorage.getItem('guangjoe-checklist');
+    return saved ? JSON.parse(saved) : DEFAULT_ITEMS;
+  }
+
+  function saveItems(items) {
+    localStorage.setItem('guangjoe-checklist', JSON.stringify(items));
+  }
+
+  function renderChecklist() {
+    const items = loadItems();
+    const container = document.getElementById('checklist-container');
+    container.innerHTML = '';
+    items.forEach((item, i) => {
+      const el = document.createElement('div');
+      el.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer';
+      el.innerHTML = `
+        <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${item.done ? 'var(--green)' : 'var(--border)'};background:${item.done ? 'var(--green)' : 'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s">
+          ${item.done ? '<svg width="12" height="12" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" stroke="#0a0a0a" stroke-width="2" fill="none"/></svg>' : ''}
+        </div>
+        <span style="font-size:14px;color:${item.done ? 'var(--muted)' : 'var(--white)'};text-decoration:${item.done ? 'line-through' : 'none'};flex:1;line-height:1.4">${item.text}</span>
+        <button onclick="event.stopPropagation();deleteItem(${i})" style="background:none;border:none;color:var(--border);font-size:18px;padding:0 4px;cursor:pointer;line-height:1">×</button>
+      `;
+      el.onclick = () => toggleItem(i);
+      container.appendChild(el);
+    });
+    // progress
+    const done = items.filter(x => x.done).length;
+    const pct = items.length ? Math.round(done/items.length*100) : 0;
+    let prog = document.getElementById('checklist-progress');
+    if (!prog) {
+      prog = document.createElement('div');
+      prog.id = 'checklist-progress';
+      prog.style.cssText = 'margin-bottom:16px;font-size:12px;color:var(--muted)';
+      container.parentNode.insertBefore(prog, container);
+    }
+    prog.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span>${done} of ${items.length} done</span><span style="color:var(--gold)">${pct}%</span></div><div style="height:4px;background:var(--border);border-radius:2px"><div style="height:4px;background:var(--gold);border-radius:2px;width:${pct}%;transition:width 0.3s"></div></div>`;
+  }
+
+  function toggleItem(i) {
+    const items = loadItems();
+    items[i].done = !items[i].done;
+    saveItems(items);
+    renderChecklist();
+  }
+
+  function deleteItem(i) {
+    const items = loadItems();
+    items.splice(i, 1);
+    saveItems(items);
+    renderChecklist();
+  }
+
+  function addItem() {
+    const input = document.getElementById('new-item');
+    const text = input.value.trim();
+    if (!text) return;
+    const items = loadItems();
+    items.unshift({ text, done: false });
+    saveItems(items);
+    input.value = '';
+    renderChecklist();
+  }
+
+  function clearDone() {
+    const items = loadItems().filter(x => !x.done);
+    saveItems(items);
+    renderChecklist();
+  }
+
+  // Init checklist
+  if (!localStorage.getItem('guangjoe-checklist')) saveItems(DEFAULT_ITEMS);
+  renderChecklist();
 </script>
 </body>
 </html>

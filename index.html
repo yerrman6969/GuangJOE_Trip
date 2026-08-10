@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="广JOE"/>
+  <meta name="theme-color" content="#0a0a0a"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="icon.svg"/>
+  <title>广JOE — GAF 2026 Guangzhou</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --black: #0a0a0a;
+      --ink: #141414;
+      --card: #1a1a1a;
+      --border: #2a2a2a;
+      --gold: #e8c84a;
+      --gold-dim: #a08c2a;
+      --white: #f0ede8;
+      --muted: #888;
+      --red: #c84a4a;
+      --green: #4ac87a;
+      --blue: #4a8cc8;
+    }
+
+    html, body {
+      background: var(--black);
+      color: var(--white);
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--black);
+      border-bottom: 1px solid var(--border);
+      padding: env(safe-area-inset-top, 0) 20px 0;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .logo-char {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .logo-joe {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 2px;
+    }
+
+    .header-sub {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: var(--black);
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-align: center;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+
+    .tab.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
+    /* CONTENT */
+    .content {
+      padding: 0 0 100px;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* COUNTDOWN */
+    .countdown-bar {
+      background: var(--ink);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .countdown-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .countdown-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown-event {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    /* DAY SECTION */
+    .day-header {
+      padding: 20px 20px 10px;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .day-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .day-date {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .day-weather {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--red);
+      font-weight: 600;
+    }
+
+    /* STOP CARD */
+    .stop {
+      display: flex;
+      gap: 0;
+      padding: 0 20px;
+      position: relative;
+    }
+
+    .stop-timeline {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 44px;
+      flex-shrink: 0;
+    }
+
+    .stop-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 2px solid var(--muted);
+      flex-shrink: 0;
+      margin-top: 4px;
+      transition: all 0.2s;
+    }
+
+    .stop-dot.done { background: var(--green); border-color: var(--green); }
+    .stop-dot.active { background: var(--gold); border-color: var(--gold); width: 12px; height: 12px; }
+    .stop-dot.key { border-color: var(--gold); }
+
+    .stop-line {
+      width: 2px;
+      flex: 1;
+      background: var(--border);
+      min-height: 16px;
+    }
+
+    .stop-body {
+      flex: 1;
+      padding: 0 0 20px 12px;
+    }
+
+    .stop-time {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stop-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 5px;
+      line-height: 1.3;
+    }
+
+    .stop-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .stop-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .tag {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .tag-sketch { background: rgba(232,200,74,0.15); color: var(--gold); }
+    .tag-food { background: rgba(74,200,122,0.15); color: var(--green); }
+    .tag-art { background: rgba(74,140,200,0.15); color: var(--blue); }
+    .tag-rest { background: rgba(136,136,136,0.15); color: var(--muted); }
+    .tag-shop { background: rgba(200,74,74,0.15); color: var(--red); }
+    .tag-gaf { background: rgba(232,200,74,0.25); color: var(--gold); border: 1px solid var(--gold-dim); }
+
+    /* DIVIDER */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 20px 16px;
+    }
+
+    /* GAF PAGE */
+    .gaf-hero {
+      background: var(--ink);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .gaf-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .gaf-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .gaf-theme {
+      font-size: 13px;
+      color: var(--gold);
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+
+    .gaf-meta {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .gaf-meta-item {
+      text-align: center;
+    }
+
+    .gaf-meta-label {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 3px;
+    }
+
+    .gaf-meta-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .info-section {
+      padding: 20px;
+    }
+
+    .info-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .info-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+
+    .info-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .info-card-body {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .info-card-body a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    /* TIPS PAGE */
+    .tip-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+
+    .tip-icon {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .tip-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .tip-body {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* WEATHER BANNER */
+    .weather-banner {
+      margin: 0 20px 16px;
+      background: rgba(200,74,74,0.1);
+      border: 1px solid rgba(200,74,74,0.3);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--red);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* BOTTOM NAV SAFE AREA */
+    .safe-bottom {
+      height: env(safe-area-inset-bottom, 20px);
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-char">广</span>
+      <span class="logo-joe">JOE</span>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:12px;font-weight:600;color:var(--white)">GAF 2026 Guangzhou</div>
+      <div class="header-sub">Aug 14–16 · Poly World Trade Center</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showPage('tue')">Tue 12</div>
+    <div class="tab" onclick="showPage('wed')">Wed 13</div>
+    <div class="tab" onclick="showPage('gaf')">GAF</div>
+    <div class="tab" onclick="showPage('tips')">Tips</div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- TUESDAY -->
+  <div class="page active" id="page-tue">
+    <div class="countdown-bar">
+      <div>
+        <div class="countdown-label">Days until GAF</div>
+        <div class="countdown-value" id="countdown">—</div>
+      </div>
+      <div style="text-align:right">
+        <div class="countdown-event">GAF opens Aug 14</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Arrive today</div>
+      </div>
+    </div>
+
+    <div class="day-header">
+      <div class="day-label">Tuesday</div>
+      <div class="day-date">August 12, 2026</div>
+      <div class="day-weather">39°C ☀️</div>
+    </div>
+
+    <div class="weather-banner">
+      ⚠️ Avoid outdoor activity 12–3 PM. Heat + humidity extreme.
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot key"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">10:00 AM</div>
+        <div class="stop-name">Arrive Junfu Meiju Hotel</div>
+        <div class="stop-desc">Room 102, No. 29 Tangxiayong West Rd, Tianhe. Store bags if room not ready. Freshen up.</div>
+        <div class="stop-tags"><span class="tag tag-rest">Check-in</span></div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">11:30 AM</div>
+        <div class="stop-name">Lunch near hotel — Tianhe</div>
+        <div class="stop-desc">Clay Pot Rice or Wonton Noodles. Casual, fast, local Cantonese.</div>
+        <div class="stop-tags"><span class="tag tag-food">Food</span></div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot key"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">1:00 PM</div>
+        <div class="stop-name">K11 Art Mall</div>
+        <div class="stop-desc">Closest interesting mall to hotel. AC refuge during peak heat. Art installations, limited edition collectibles, niche lifestyle brands.</div>
+        <div class="stop-tags"><span class="tag tag-art">Art</span><span class="tag tag-shop">Shop</span><span class="tag tag-rest">AC</span></div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot key"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">3:00 PM</div>
+        <div class="stop-name">Sketch travel — MRT to Shamian</div>
+        <div class="stop-desc">MRT Line 1 west. Sketch on the way — MRT interior, street scenes, people watching. Arrive when heat subsides ~4 PM.</div>
+        <div class="stop-tags"><span class="tag tag-sketch">Sketch</span></div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot key"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">4:00 PM</div>
+        <div class="stop-name">Shamian Island — sketch session</div>
+        <div class="stop-desc">Colonial tree-lined streets, qilou rooflines — direct visual reference for 广JOE logo. Golden hour light for ink + gouache reference. Leave by 6 PM.</div>
+        <div class="stop-tags"><span class="tag tag-sketch">Sketch</span><span class="tag tag-art">广JOE ref</span></div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot key"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">6:00 PM</div>
+        <div class="stop-name">Yuexiu Park + Five Rams Statue</div>
+        <div class="stop-desc">Evening stroll in cooler air. Sketch Five Rams Statue — direct character reference for JOE universe. Each ram has distinct personality.</div>
+        <div class="stop-tags"><span class="tag tag-sketch">Sketch</span><span class="tag tag-art">JOE ref</span></div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">7:30 PM</div>
+        <div class="stop-name">Dinner — Shangxiajiu area</div>
+        <div class="stop-desc">Wife cakes, Char Siu, Roast Goose nearby before heading back to Tianhe.</div>
+        <div class="stop-tags"><span class="tag tag-food">Food</span></div>
+      </div>
+    </div>
+    <div class="safe-bottom"></div>
+  </div>
+
+  <!-- WEDNESDAY -->
+  <div class="page" id="page-wed">
+    <div class="day-header">
+      <div class="day-label">Wednesday</div>
+      <div class="day-date">August 13, 2026</div>
+      <div class="day-weather">40°C ☀️</div>
+    </div>
+
+    <div class="weather-banner">
+      ⚠️ Hottest day of trip. All outdoor activity must be done before noon.
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot key"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">6:30 AM</div>
+        <div class="stop-name">Yum Cha breakfast — local teahouse</div>
+        <div class="stop-desc">Start the Guangzhou ritual early before crowds. Order Cheong Fun, Har Gow, pot of Pu'er. Remember: 2-finger tap to say thank you when tea is poured.</div>
+        <div class="stop-tags"><span class="tag tag-food">Yum Cha</span><span class="tag tag-art">广JOE inspo</span></div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot key"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">8:30 AM</div>
+        <div class="stop-name">Yongqingfang — morning stroll + souvenirs</div>
+        <div class="stop-desc">Lingnan alley architecture, street art, indie design shops. Look for Canton Enamel pieces and Cantonese Opera face masks for 广JOE series reference. Leave before heat peaks.</div>
+        <div class="stop-tags"><span class="tag tag-sketch">Sketch</span><span class="tag tag-shop">Souvenir</span><span class="tag tag-art">广JOE ref</span></div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">11:30 AM</div>
+        <div class="stop-name">Lunch + MRT to Changgang</div>
+        <div class="stop-desc">Eat near Yongqingfang or on the way. MRT Line 8 south to Changgang Station — direct single line. ~20 min ride.</div>
+        <div class="stop-tags"><span class="tag tag-food">Food</span><span class="tag tag-rest">MRT Line 8</span></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div style="padding: 0 20px 10px; display:flex; align-items:center; gap:10px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--gold);font-weight:700">GAFA All Afternoon</div>
+      <div style="height:1px;flex:1;background:var(--border)"></div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot key"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">1:00 PM</div>
+        <div class="stop-name">GAFA Changgang Campus — explore</div>
+        <div class="stop-desc">Walk campus grounds, outdoor sculpture lot, student artwork everywhere. The only fine arts academy in South China — founded 1953. MRT Line 8 Changgang Station Exit B, 10 min walk.</div>
+        <div class="stop-tags"><span class="tag tag-art">Art</span></div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot key"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">2:00 PM</div>
+        <div class="stop-name">GAFA Art Museum — 绽放 Exhibition</div>
+        <div class="stop-desc">3rd National University Student Art Exhibition — Experimental Art, Digital Art & Animation section. Book ticket via Damai (大麦) WeChat mini program in advance. No. 257 Changgang East Rd.</div>
+        <div class="stop-tags"><span class="tag tag-art">Exhibition</span><span class="tag tag-rest">AC</span></div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot key"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">4:00 PM</div>
+        <div class="stop-name">GAFA Campus Bookstore</div>
+        <div class="stop-desc">Art books, GAFA-branded merchandise, design publications at student prices. Better selection than most Bangkok art bookstores.</div>
+        <div class="stop-tags"><span class="tag tag-shop">Books</span><span class="tag tag-art">Art supplies</span></div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot key"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">4:30 PM</div>
+        <div class="stop-name">Bixiaoxuan Drawing Materials</div>
+        <div class="stop-desc">252 Changgang Dong Lu — right outside GAFA gate. Professional grade G Pen nibs, ink, gouache, sketchbooks. Cheaper than Bangkok. Check closing time on Xiaohongshu "笔小轩 昌岗" before going.</div>
+        <div class="stop-tags"><span class="tag tag-shop">Art Supply</span></div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot key"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">6:00 PM</div>
+        <div class="stop-name">Hotel — booth prep & rest</div>
+        <div class="stop-desc">Back to Junfu Meiju via MRT Line 8 north. Organize artwork, set up booth materials. Early night — GAF Day 1 starts tomorrow Aug 14.</div>
+        <div class="stop-tags"><span class="tag tag-rest">Prep</span><span class="tag tag-gaf">Pre-GAF</span></div>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="stop-timeline">
+        <div class="stop-dot"></div>
+        <div class="stop-line"></div>
+      </div>
+      <div class="stop-body">
+        <div class="stop-time">7:30 PM</div>
+        <div class="stop-name">Dinner — local Cantonese near hotel</div>
+        <div class="stop-desc">Roast Goose or Clay Pot Rice in Tianhe. Early night — GAF opens Aug 14.</div>
+        <div class="stop-tags"><span class="tag tag-food">Food</span></div>
+      </div>
+    </div>
+    <div class="safe-bottom"></div>
+  </div>
+
+  <!-- GAF INFO -->
+  <div class="page" id="page-gaf">
+    <div class="gaf-hero">
+      <div class="gaf-title">2026 GAF Guangzhou — 广州插画艺术节</div>
+      <div class="gaf-name">GAF 2026 Guangzhou</div>
+      <div class="gaf-theme">"The Vein of Blossoms"</div>
+      <div class="gaf-meta">
+        <div class="gaf-meta-item">
+          <div class="gaf-meta-label">Dates</div>
+          <div class="gaf-meta-value">Aug 14–16</div>
+        </div>
+        <div class="gaf-meta-item">
+          <div class="gaf-meta-label">Venue</div>
+          <div class="gaf-meta-value">Poly WTC Hall 2</div>
+        </div>
+        <div class="gaf-meta-item">
+          <div class="gaf-meta-label">Edition</div>
+          <div class="gaf-meta-value">3rd GAF</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-title">Your Booth</div>
+      <div class="info-card">
+        <div class="info-card-title">广JOE — Guangzhou Edition</div>
+        <div class="info-card-body">Artist: Suttichart Sarapaiwanich (อาจารย์โจ)<br/>Series concept: JOE + Yum Cha culture<br/>Hero piece: "Undercover at Yum Cha"<br/>Format: A2 framed print + 7-card postcard series</div>
+      </div>
+
+      <div class="info-title" style="margin-top:20px">GAF Days Schedule</div>
+
+      <div class="info-card">
+        <div class="info-card-title">🗓 Aug 14 (Thu) — Day 1</div>
+        <div class="info-card-body">Yum Cha 6:30 AM before booth setup. GAF opens. First day — highest traffic. Booth ready early.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">🗓 Aug 15 (Fri) — Day 2</div>
+        <div class="info-card-body">Morning showers forecast (9.8mm). Umbrella essential. Booth energy: mid-festival peak.</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">🗓 Aug 16 (Sat) — Day 3</div>
+        <div class="info-card-body">Thunderstorm possible. Last day — final push. Dinner and rest after closing.</div>
+      </div>
+
+      <div class="info-title" style="margin-top:20px">Venue</div>
+      <div class="info-card">
+        <div class="info-card-title">Poly World Trade Center</div>
+        <div class="info-card-body">保利世界贸易中心, Hall 2<br/>Haizhu District, Guangzhou<br/>Organizer: 广州插画艺术文化有限公司<br/>Supervising org: 广州市文联</div>
+      </div>
+
+      <div class="info-title" style="margin-top:20px">Google Forms — Sales</div>
+      <div class="info-card">
+        <div class="info-card-title">Artwork Sales Form (Auto Sold-Out)</div>
+        <div class="info-card-body">Google Forms + Apps Script — auto marks one-of-a-kind pieces as sold when purchased. Check Google Sheets dashboard to monitor stock.</div>
+      </div>
+    </div>
+    <div class="safe-bottom"></div>
+  </div>
+
+  <!-- TIPS -->
+  <div class="page" id="page-tips">
+    <div class="info-section">
+      <div class="info-title">Hotel</div>
+      <div class="info-card">
+        <div class="info-card-title">Junfu Meiju Hotel</div>
+        <div class="info-card-body">Room 102<br/>No. 29, Tangxiayong West Road<br/>Tianhe District, Guangzhou</div>
+      </div>
+
+      <div class="info-title" style="margin-top:20px">Weather — Full Trip</div>
+      <div class="info-card">
+        <div class="info-card-body" style="font-size:13px">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>Tue Aug 12</span><span style="color:var(--red);font-weight:600">39°C ☀️ No rain</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>Wed Aug 13</span><span style="color:var(--red);font-weight:600">40°C ☀️ No rain</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>Thu Aug 14 (GAF 1)</span><span style="color:var(--gold)">32°C 🌧 2mm</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>Fri Aug 15 (GAF 2)</span><span style="color:var(--gold)">34°C 🌧 9.8mm</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><span>Sat Aug 16 (GAF 3)</span><span style="color:var(--blue)">36°C ⛈ Thunder</span></div>
+        </div>
+      </div>
+
+      <div class="info-title" style="margin-top:20px">Essential Tips</div>
+
+      <div class="tip-card">
+        <div class="tip-icon">💳</div>
+        <div class="tip-title">Payment</div>
+        <div class="tip-body">Alipay or WeChat Pay everywhere. Cash rarely accepted. Set up before leaving Bangkok.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🗺️</div>
+        <div class="tip-title">Navigation</div>
+        <div class="tip-body">Google Maps doesn't work in China. Use Amap (Gaode) or Apple Maps. Download offline before flying.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🚇</div>
+        <div class="tip-title">MRT Key Lines</div>
+        <div class="tip-body">Line 1: Tianhe ↔ Shamian (west). Line 8: Changgang (GAFA). Signs and announcements in English.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🌡️</div>
+        <div class="tip-title">Heat Strategy</div>
+        <div class="tip-body">Sketch outdoors before 11 AM or after 5 PM only. 12–3 PM: AC indoors (mall, museum). Carry cooling towel + SPF50.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🫰</div>
+        <div class="tip-title">Yum Cha Etiquette</div>
+        <div class="tip-body">2-finger tap = thank you when tea poured (peer level). Tilt teapot lid open = need refill. Say "唔该" (m̀h'gōi) to thank staff.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🚲</div>
+        <div class="tip-title">Bike Sharing</div>
+        <div class="tip-body">HelloBike (blue) via Alipay — supports international numbers. ~1.5 RMB per 30 min. Only ride early AM or after 5 PM in August.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">📱</div>
+        <div class="tip-title">Xiaohongshu</div>
+        <div class="tip-body">Use your account to find local spots, restaurants, and art supply shops. Search "广州" + what you need. Better than any travel guide.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-icon">🛡️</div>
+        <div class="tip-title">Language</div>
+        <div class="tip-body">Cantonese is primary in local shops — not Mandarin. Use Google Translate camera mode to read menus. Staff at malls and MRT speak some English.</div>
+      </div>
+
+      <div class="info-title" style="margin-top:20px">Flight</div>
+      <div class="info-card">
+        <div class="info-card-title">BKK → Guangzhou (CAN)</div>
+        <div class="info-card-body">~3 hrs direct. Guangzhou Baiyun International Airport.<br/>Recommended: China Southern (CZ) — most flights, 2-bag allowance (23kg+32kg).<br/>Guangzhou is GMT+8 — 1 hr ahead of Bangkok.</div>
+      </div>
+    </div>
+    <div class="safe-bottom"></div>
+  </div>
+
+</div>
+
+<script>
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
+  // Tab navigation
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Countdown
+  function updateCountdown() {
+    const gaf = new Date('2026-08-14T00:00:00+08:00');
+    const now = new Date();
+    const diff = gaf - now;
+    const el = document.getElementById('countdown');
+    if (!el) return;
+    if (diff <= 0) {
+      el.textContent = 'NOW';
+      el.style.color = '#4ac87a';
+      return;
+    }
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hrs = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    el.textContent = days > 0 ? `${days}d ${hrs}h` : `${hrs}h ${mins}m`;
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 30000);
+</script>
+</body>
+</html>

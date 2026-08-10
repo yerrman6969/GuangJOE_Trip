@@ -420,13 +420,13 @@
     </div>
   </div>
 
-  <div class="tabs">
-    <div class="tab active" onclick="showPage('tue')">Tue 12</div>
-    <div class="tab" onclick="showPage('wed')">Wed 13</div>
-    <div class="tab" onclick="showPage('gaf')">GAF</div>
-    <div class="tab" onclick="showPage('tips')">Tips</div>
-    <div class="tab" onclick="showPage('files')">Files</div>
-    <div class="tab" onclick="showPage('checklist')">✓ List</div>
+  <div class="tabs" id="tab-bar">
+    <div class="tab active" data-page="tue">Tue 12</div>
+    <div class="tab" data-page="wed">Wed 13</div>
+    <div class="tab" data-page="gaf">GAF</div>
+    <div class="tab" data-page="tips">Tips</div>
+    <div class="tab" data-page="files">Files</div>
+    <div class="tab" data-page="checklist">✓ List</div>
   </div>
 </div>
 
@@ -448,10 +448,10 @@
     <div class="day-header">
       <div class="day-label">Tuesday</div>
       <div class="day-date">August 12, 2026</div>
-      <div class="day-weather">39°C ☀️</div>
+      <div class="day-weather" id="weather-tue">—</div>
     </div>
 
-    <div class="weather-banner">
+    <div class="weather-banner" id="weather-banner-tue">
       ⚠️ Avoid outdoor activity 12–3 PM. Heat + humidity extreme.
     </div>
 
@@ -553,10 +553,10 @@
     <div class="day-header">
       <div class="day-label">Wednesday</div>
       <div class="day-date">August 13, 2026</div>
-      <div class="day-weather">40°C ☀️</div>
+      <div class="day-weather" id="weather-wed">—</div>
     </div>
 
-    <div class="weather-banner">
+    <div class="weather-banner" id="weather-banner-wed">
       ⚠️ Hottest day of trip. All outdoor activity must be done before noon.
     </div>
 
@@ -755,16 +755,12 @@
       </div>
 
       <div class="info-title" style="margin-top:20px">Weather — Full Trip</div>
-      <div class="info-card">
-        <div class="info-card-body" style="font-size:13px">
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>Tue Aug 12</span><span style="color:var(--red);font-weight:600">39°C ☀️ No rain</span></div>
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>Wed Aug 13</span><span style="color:var(--red);font-weight:600">40°C ☀️ No rain</span></div>
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>Thu Aug 14 (Setup)</span><span style="color:var(--gold)">32°C 🌧 2mm</span></div>
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>Fri Aug 15 (GAF 1)</span><span style="color:var(--gold)">34°C 🌧 9.8mm</span></div>
-          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)"><span>Sat Aug 16 (GAF 2)</span><span style="color:var(--blue)">36°C ⛈ Thunder</span></div>
-          <div style="display:flex;justify-content:space-between;padding:6px 0"><span>Sun Aug 17 (GAF 3)</span><span style="color:var(--muted)">— 🌤 Clearing</span></div>
+      <div class="info-card" id="weather-full">
+        <div class="info-card-body" style="font-size:13px;text-align:center;color:var(--muted);padding:10px 0">
+          Loading weather...
         </div>
       </div>
+      <div style="font-size:10px;color:var(--border);text-align:right;margin-top:4px" id="weather-updated"></div>
 
       <div class="info-title" style="margin-top:20px">Essential Tips</div>
 
@@ -993,14 +989,17 @@
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
 
-  // Tab navigation
-  function showPage(id) {
+  // Tab navigation — event delegation
+  document.getElementById('tab-bar').addEventListener('click', function(e) {
+    const tab = e.target.closest('[data-page]');
+    if (!tab) return;
+    const id = tab.dataset.page;
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.getElementById('page-' + id).classList.add('active');
-    event.target.classList.add('active');
+    tab.classList.add('active');
     window.scrollTo(0, 0);
-  }
+  });
 
   // Countdown
   function updateCountdown() {
@@ -1022,6 +1021,117 @@
 
   updateCountdown();
   setInterval(updateCountdown, 30000);
+
+  // LIVE WEATHER — OpenWeatherMap 5-day forecast
+  const OWM_KEY = '8f5ed8d526260307822ed513a8b4d53b'; // SS_Travel key
+  const GZ_LAT = 23.1291;
+  const GZ_LON = 113.2644;
+  const TRIP_DAYS = [
+    { date: '2026-08-12', label: 'Tue Aug 12', tag: 'Explore', elId: 'weather-tue', bannerId: 'weather-banner-tue' },
+    { date: '2026-08-13', label: 'Wed Aug 13', tag: 'Explore', elId: 'weather-wed', bannerId: 'weather-banner-wed' },
+    { date: '2026-08-14', label: 'Thu Aug 14', tag: 'Setup' },
+    { date: '2026-08-15', label: 'Fri Aug 15', tag: 'GAF 1' },
+    { date: '2026-08-16', label: 'Sat Aug 16', tag: 'GAF 2' },
+    { date: '2026-08-17', label: 'Sun Aug 17', tag: 'GAF 3' },
+  ];
+
+  function weatherIcon(id, pop) {
+    if (id >= 200 && id < 300) return '⛈';
+    if (id >= 300 && id < 600) return pop > 0.3 ? '🌧' : '🌦';
+    if (id >= 600 && id < 700) return '❄️';
+    if (id === 800) return '☀️';
+    if (id > 800) return '⛅';
+    return '🌤';
+  }
+
+  function weatherColor(temp) {
+    if (temp >= 38) return 'var(--red)';
+    if (temp >= 33) return '#e87a4a';
+    if (temp >= 28) return 'var(--gold)';
+    return 'var(--blue)';
+  }
+
+  async function fetchWeather() {
+    try {
+      const cached = localStorage.getItem('guangjoe-weather');
+      const cachedTime = localStorage.getItem('guangjoe-weather-time');
+      const now = Date.now();
+
+      // Use cache if less than 3 hours old
+      if (cached && cachedTime && now - parseInt(cachedTime) < 3 * 60 * 60 * 1000) {
+        renderWeather(JSON.parse(cached));
+        return;
+      }
+
+      const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${GZ_LAT}&lon=${GZ_LON}&appid=${OWM_KEY}&units=metric&cnt=40`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('API error');
+      const data = await res.json();
+
+      localStorage.setItem('guangjoe-weather', JSON.stringify(data));
+      localStorage.setItem('guangjoe-weather-time', now.toString());
+      renderWeather(data);
+    } catch (e) {
+      console.warn('Weather fetch failed:', e);
+      document.getElementById('weather-full').innerHTML = '<div class="info-card-body" style="color:var(--muted);font-size:12px">Weather unavailable — check connection.</div>';
+    }
+  }
+
+  function renderWeather(data) {
+    const byDay = {};
+    data.list.forEach(item => {
+      const date = item.dt_txt.split(' ')[0];
+      if (!byDay[date]) byDay[date] = [];
+      byDay[date].push(item);
+    });
+
+    // Build full trip weather table
+    let html = '<div class="info-card-body" style="font-size:13px">';
+    TRIP_DAYS.forEach((day, i) => {
+      const entries = byDay[day.date] || [];
+      const borderStyle = i < TRIP_DAYS.length - 1 ? 'border-bottom:1px solid var(--border)' : '';
+      if (!entries.length) {
+        html += `<div style="display:flex;justify-content:space-between;padding:6px 0;${borderStyle}"><span>${day.label} <span style="color:var(--muted);font-size:11px">${day.tag}</span></span><span style="color:var(--muted)">No data</span></div>`;
+        return;
+      }
+      const maxTemp = Math.round(Math.max(...entries.map(e => e.main.temp_max)));
+      const minTemp = Math.round(Math.min(...entries.map(e => e.main.temp_min)));
+      const pop = Math.max(...entries.map(e => e.pop || 0));
+      const id = entries[Math.floor(entries.length/2)].weather[0].id;
+      const icon = weatherIcon(id, pop);
+      const color = weatherColor(maxTemp);
+      const rainText = pop > 0.2 ? ` ${Math.round(pop*100)}% rain` : '';
+      const isLast = i === TRIP_DAYS.length - 1;
+
+      const rowBorder = isLast ? '' : 'border-bottom:1px solid var(--border)';
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;${rowBorder}">
+        <span>${day.label} <span style="color:var(--muted);font-size:11px">${day.tag}</span></span>
+        <span style="color:${color};font-weight:600">${maxTemp}°C ${icon}${rainText}</span>
+      </div>`;
+
+      // Update day header badges
+      if (day.elId) {
+        const el = document.getElementById(day.elId);
+        if (el) el.textContent = `${maxTemp}°C ${icon}`;
+      }
+      // Update weather banner if very hot
+      if (day.bannerId) {
+        const banner = document.getElementById(day.bannerId);
+        if (banner && maxTemp >= 38) {
+          banner.textContent = `⚠️ ${maxTemp}°C today — avoid outdoor activity 12–3 PM.`;
+        }
+      }
+    });
+    html += '</div>';
+
+    const container = document.getElementById('weather-full');
+    if (container) container.innerHTML = html;
+
+    const updated = document.getElementById('weather-updated');
+    if (updated) updated.textContent = 'Updated: ' + new Date().toLocaleTimeString();
+  }
+
+  fetchWeather();
 
   // CHECKLIST
   const DEFAULT_ITEMS = [
@@ -1068,8 +1178,9 @@
           ${item.done ? '<svg width="12" height="12" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" stroke="#0a0a0a" stroke-width="2" fill="none"/></svg>' : ''}
         </div>
         <span style="font-size:14px;color:${item.done ? 'var(--muted)' : 'var(--white)'};text-decoration:${item.done ? 'line-through' : 'none'};flex:1;line-height:1.4">${item.text}</span>
-        <button onclick="event.stopPropagation();deleteItem(${i})" style="background:none;border:none;color:var(--border);font-size:18px;padding:0 4px;cursor:pointer;line-height:1">×</button>
+        <button data-idx="${i}" style="background:none;border:none;color:var(--border);font-size:18px;padding:0 4px;cursor:pointer;line-height:1">×</button>
       `;
+      el.querySelector('button').addEventListener('click', function(e){ e.stopPropagation(); deleteItem(parseInt(this.dataset.idx)); });
       el.onclick = () => toggleItem(i);
       container.appendChild(el);
     });
